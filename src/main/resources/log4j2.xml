@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" strict="true"
+	name="FopPdfService" monitorInterval="30"
+	packages="org.apache.logging.log4j.test">
+	<Properties>
+		<Property name="appName">fop-pdf-service</Property>
+		<Property name="logFolder">${main:logdir}</Property>
+		<Property name="logExt">log</Property>
+		<Property name="filename">${logFolder}/${appName}.${logExt}</Property>
+
+		<Property name="PdfGenMarker">FopPdfGen</Property>
+
+		<Property name="logPattern"> %date{yyyMMdd HH:mm:ss.SSS} [%-22.22thread] %-5level %-20.20logger{1} - %msg%n</Property>
+		<Property name="filePattern">%date{yyyy-MM-dd' 'HH:mm:ss.SSS Z} {%-22.22thread} %-5level %-20.20logger{1} - %m%n</Property>
+		<Property name="consolePattern">%date{yyyy-MM-dd' 'HH:mm:ss.SSS Z} {%-22.22thread} %-5level %-20.20logger{1} - %m%n</Property>
+		<Property name="jerseyPattern">%date{yyyy-MM-dd' 'HH:mm:ss.SSS Z} {%-22.22thread} %-5level %-20.20logger{1} - %m%n</Property>
+	</Properties>
+
+	<Appenders>
+		<Appender type="Console" name="STDOUT">
+			<Layout type="PatternLayout" pattern="${consolePattern}" />
+			<Filters>
+				<Filter type="MarkerFilter" marker="${PdfGenMarker}"
+					onMatch="DENY" onMismatch="NEUTRAL" />
+				<Filter type="MarkerFilter" marker="FLOW" onMatch="NEUTRAL"
+					onMismatch="NEUTRAL" />
+				<Filter type="MarkerFilter" marker="EXCEPTION"
+					onMatch="NEUTRAL" onMismatch="ACCEPT" />
+			</Filters>
+		</Appender>
+
+		<Appender type="Console" name="JERSEY">
+			<Layout type="PatternLayout" pattern="${jerseyPattern}" />
+			<Filters>
+				<Filter type="MarkerFilter" marker="FLOW" onMatch="DENY"
+					onMismatch="NEUTRAL" />
+				<Filter type="MarkerFilter" marker="EXCEPTION" onMatch="DENY"
+					onMismatch="ACCEPT" />
+			</Filters>
+		</Appender>
+
+		<Appender type="RollingFile" name="RollingFile"
+			fileName="${filename}"
+			filePattern="${logFolder}/${appName}-%d{MM-dd-yyyy}.${logExt}.gz">
+			<!-- filePattern="${logFolder}/${appName}-%d{MM-dd-yyyy}-%i.${logExt}.gz"> -->
+			<MarkerFilter marker="${PdfGenMarker}" onMatch="DENY"
+				onMismatch="ACCEPT" />
+			<Layout type="PatternLayout" pattern="${filePattern}" />
+
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+				<!-- <SizeBasedTriggeringPolicy size="10 MB"/> -->
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</Appender>
+
+		<Routing name="Routing">
+			<Filters>
+				<MarkerFilter marker="${PdfGenMarker}" onMatch="ACCEPT"
+					onMismatch="DENY" />
+			</Filters>
+			<Routes pattern="$${ctx:ROUTINGKEY}">
+				<Route>
+					<File name="PDFLog-${ctx:jobId}" fileName="${ctx:logFile}">
+						<ThresholdFilter level="${ctx:logLevel}"
+							onMatch="ACCEPT" onMismatch="DENY" />
+						<PatternLayout>
+							<pattern>[%date{MMM dd HH:mm:ss.SSS Z yyyy}] %-5level: %m%n
+							</pattern>
+						</PatternLayout>
+					</File>
+				</Route>
+			</Routes>
+			<IdlePurgePolicy timeToLive="10" timeUnit="minutes" />
+		</Routing>
+
+	</Appenders>
+
+	<Loggers>
+		<Logger name="org.glassfish.jersey.logging" level="warn"
+			additivity="false">
+			<AppenderRef ref="JERSEY" />
+		</Logger>
+
+		<Logger name="com.rcs" level="debug" additivity="false">
+			<AppenderRef ref="Routing" />
+			<AppenderRef ref="STDOUT" />
+			<AppenderRef ref="RollingFile" />
+		</Logger>
+
+		<Root level="warn">
+			<AppenderRef ref="STDOUT" />
+		</Root>
+	</Loggers>
+
+</Configuration>
