@@ -75,13 +75,13 @@ EOF_CONFIG
 
 %install
 # rm -rf %{buildroot}
-#install -d -m 755 %{buildroot}/opt/%{name}
-#install -d -m 755 %{buildroot}/opt/%{name}/log
-#install -d -m 755 %{buildroot}/opt/%{name}/tmp
+install -d -m 755 %{buildroot}/opt/%{name}
+install -d -m 755 %{buildroot}/opt/%{name}/log
+install -d -m 755 %{buildroot}/opt/%{name}/tmp
 
-install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY
-install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/log
-install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/tmp
+#install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY
+#install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/log
+3install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/tmp
 
 cp -r %{_sourcedir}/opt/%{name}/* %{buildroot}/opt/%{name}
 
@@ -132,7 +132,7 @@ install -m 664 %{_sourcedir}/opt/%{name}/lib/app/version.txt %{buildroot}/opt/%{
 %files -f %{package_filelist}
 %defattr(-,%{FopPdfUser}, %{FopPdfUser},-)
 
-# Add the files that we generated ourselves (which won't be in %{package_filelist})
+# Add the files that we generated ourselves (which won't be in package_filelist)
 %{_unitdir}/%{name}.service
 
 %config(noreplace) /opt/%{name}/%{name}.properties
