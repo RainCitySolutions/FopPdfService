@@ -122,9 +122,9 @@ jobs:
         cache: maven
          
     # Create the icon set for use by the application
-    - name: Create Icon Set
-      run: |
-        convert -background transparent icons/cprn-icon1024x1024.png -define icon:auto-resize=16,32,48,64,128,256 -compress zip icons/cprn-lnx.ico
+#    - name: Create Icon Set
+#      run: |
+#        convert -background transparent icons/cprn-icon1024x1024.png -define icon:auto-resize=16,32,48,64,128,256 -compress zip icons/cprn-lnx.ico
 
     # BUILD FOR DISTRIBUTION
     - name: Build distribution
