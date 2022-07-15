@@ -42,7 +42,9 @@ Requires(pre): shadow-utils
 APPLICATION_DESCRIPTION
 
 %prep
-
+echo App Desc - APPLICATION_DESCRIPTION
+echo App Pkg  - APPLICATION_PACKAGE
+echo Version  - APPLICATION_VERSION
 
 %build
 # Create the Service Unit file
@@ -81,7 +83,7 @@ install -d -m 755 %{buildroot}/opt/%{name}/tmp
 
 #install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY
 #install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/log
-3install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/tmp
+#install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/tmp
 
 cp -r %{_sourcedir}/opt/%{name}/* %{buildroot}/opt/%{name}
 
