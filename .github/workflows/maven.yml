@@ -131,7 +131,7 @@ jobs:
       run: |
         mvn -B package --file pom.xml
         jpackage --verbose --type deb --app-version ${{ needs.build-test.outputs.release_version }} "@jpackage/jpackage.cfg" "@jpackage/jpackage-linux.cfg"
-        mv ./target/dist/fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_amd64.deb ./target/dist/fop-pdif-service-${{ needs.build-test.outputs.release_version }}.deb
+        mv ./target/dist/fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_amd64.deb ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
 
     # SAVE INSTALLER
     - name: Upload installer
