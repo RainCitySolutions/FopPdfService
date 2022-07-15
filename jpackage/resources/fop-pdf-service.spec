@@ -1,7 +1,7 @@
 Summary: APPLICATION_SUMMARY
 Name: APPLICATION_PACKAGE
 Version: APPLICATION_VERSION
-Release: 1
+Release: APPLICATION_RELEASE
 License: APPLICATION_LICENSE_TYPE
 Vendor: APPLICATION_VENDOR
 
@@ -48,27 +48,26 @@ echo Version  - APPLICATION_VERSION
 echo Summary  - APPLICATION_SUMMARY
 echo Release  - APPLICATION_RELEASE
 echo License  - APPLICATION_LICENSE_TYPE
-echo Vendor   - APPLICATION_VENDOR
-echo Inst Dir - INSTALLATION_DIRECTORY
-echo App Usr  - APPLICATION_USER
-echo App Grp  - APPLICATION_GROUP
-echo pkg Deps - PACKAGE_DEPENDENCIES
-echo AppFsName  APPLICATION_FS_NAME
 echo LicFile  - APPLICATION_LICENSE_FILE
-echo AppLnchr - APPLICATION_LAUNCHER_FILENAME
+echo Vendor   - APPLICATION_VENDOR
+echo AppLnchr - APPLICATION_LAUNCHER
+#echo Inst Dir - INSTALLATION_DIRECTORY
+#echo App Usr  - APPLICATION_USER
+#echo App Grp  - APPLICATION_GROUP
+#echo AppFsName  APPLICATION_FS_NAME
 
 %build
 # Create the Service Unit file
 cat > %{name}.service <<'EOF_SERVICE'
 [Unit]
-Description=FOP PDF Service
+Description=APPLICATION_DESCRIPTION
 After=network.target
 
 [Service]
 User=%{FopPdfUser}
 Group=%{FopPdfUser}
 Type=simple
-ExecStart=/opt/%{name}/bin/FopPdfService
+ExecStart=APPLICATION_LAUNCHER
 WorkingDirectory=/opt/%{name}
 Restart=always
 RestartSec=5
