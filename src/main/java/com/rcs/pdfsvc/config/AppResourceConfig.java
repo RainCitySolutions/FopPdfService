@@ -24,7 +24,7 @@ public class AppResourceConfig
 	{
 		setApplicationName("HSIR PDF Service");
 
-		packages("edu.utah.hsir.pdfsvc.resource");
+		packages("com.rcs.pdfsvc.resource");
 
 		register(FopPdfAppEventListener.class);
 		register(new LoggingFeature(Logger.getLogger(LoggingFeature.DEFAULT_LOGGER_NAME),

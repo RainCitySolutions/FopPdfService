@@ -121,9 +121,6 @@ install -m 644 %{name}.service %{buildroot}%{_unitdir}/%{name}.service
 # Copy the initial properties file to our root
 install -m 664 %{name}.properties %{buildroot}/opt/%{name}/%{name}.properties
 
-# Copy the initial database into place
-install -m 664 %{_sourcedir}/opt/%{name}/lib/app/OrionDataServer.db.init %{buildroot}/opt/%{name}/OrionDataServer.db
-
 # Copy version.txt into place
 install -m 664 %{_sourcedir}/opt/%{name}/lib/app/version.txt %{buildroot}/opt/%{name}/
 

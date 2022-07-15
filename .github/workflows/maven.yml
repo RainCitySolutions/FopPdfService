@@ -1,7 +1,7 @@
 # This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Java CI with Maven
+name: Build and Package FopPdfService
 
 on:
   push:
@@ -109,13 +109,13 @@ jobs:
       run: |
         mvn -B package --file pom.xml
         jpackage --verbose --type rpm --app-version ${{ needs.build-test.outputs.release_version }} "@jpackage/jpackage.cfg" "@jpackage/jpackage-linux.cfg"
-        mv ./target/dist/orion-data-server-${{ needs.build-test.outputs.release_version }}-1.x86_64.rpm ./target/dist/orion-data-server-${{ needs.build-test.outputs.release_version }}.rpm
+        mv ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}-1.x86_64.rpm ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
 
     # SAVE INSTALLER
     - name: Upload installer
       uses: actions/upload-artifact@v2
       with:
-        path: ./target/dist/orion-data-server-${{ needs.build-test.outputs.release_version }}.rpm
+        path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
         name: linux-rpm-installer
         retention-days: 1
 
@@ -162,14 +162,14 @@ jobs:
     - name: Zip App Image
       uses: papeloto/action-zip@v1
       with:
-        files: ./target/dist/OrionDataServer
-        dest: ./target/dist/orion-data-server-${{ needs.build-test.outputs.release_version }}.linux.zip
+        files: ./target/dist/FopPdfService
+        dest: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
     
     # SAVE INSTALLER
     - name: Upload installer
       uses: actions/upload-artifact@v2
       with:
-        path: ./target/dist/orion-data-server-${{ needs.build-test.outputs.release_version }}.linux.zip
+        path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
         name: linux-app-image
         retention-days: 1
 
@@ -211,14 +211,14 @@ jobs:
     - name: Zip App Image
       uses: papeloto/action-zip@v1
       with:
-        files: ./target/dist/OrionDataServer
-        dest: ./target/dist/orion-data-server-${{ needs.build-test.outputs.release_version }}.zip
+        files: ./target/dist/FopPdfService
+        dest: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
     
     # SAVE INSTALLER
     - name: Upload installer
       uses: actions/upload-artifact@v2
       with:
-        path: ./target/dist/orion-data-server-${{ needs.build-test.outputs.release_version }}.zip
+        path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
         name: windows-app-image
         retention-days: 1
 
@@ -250,7 +250,7 @@ jobs:
     - name: Rename downloaded files
       run: |
         ls -alR
-#        mv orion-data-server_${{ needs.build-test.outputs.release_version }}-1_amd64.deb orion-data-server-${{ needs.build-test.outputs.release_version }}.deb
+#        mv fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_amd64.deb fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
 #        ls -alR
 
     # CREATE GITHUB RELEASE AND ADD ASSETS
@@ -271,8 +271,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: orion-data-server-${{ needs.build-test.outputs.release_version }}.rpm
-        asset_name: orion-data-server-${{ needs.build-test.outputs.release_version }}.rpm
+        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
+        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
         asset_content_type: application/x-binary
 
     - name: Release Linux App Image
@@ -282,8 +282,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: orion-data-server-${{ needs.build-test.outputs.release_version }}.linux.zip
-        asset_name: orion-data-server-${{ needs.build-test.outputs.release_version }}.linux.zip
+        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
+        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
         asset_content_type: application/x-binary
 
     - name: Release Windows App Image
@@ -293,6 +293,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: orion-data-server-${{ needs.build-test.outputs.release_version }}.zip
-        asset_name: orion-data-server-${{ needs.build-test.outputs.release_version }}.zip
+        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
+        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
         asset_content_type: application/x-binary
