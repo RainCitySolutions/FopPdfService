@@ -28,15 +28,15 @@ jobs:
         distribution: 'adopt'
         cache: maven
 
-    - name: Setup Maven Settings
-      uses: s4u/maven-settings-action@v2.4.1
-      with:
-        servers: |
-          [{
-              "id": "maven.github.java-redcap",
-              "username": "${{ secrets.USER_4_PACKAGE_READ }}",
-              "password": "${{ secrets.TOKEN_4_PACKAGE_READ }}"
-          }]
+#    - name: Setup Maven Settings
+#      uses: s4u/maven-settings-action@v2.4.1
+#      with:
+#        servers: |
+#          [{
+#              "id": "maven.github.java-redcap",
+#              "username": "${{ secrets.USER_4_PACKAGE_READ }}",
+#              "password": "${{ secrets.TOKEN_4_PACKAGE_READ }}"
+#          }]
 
     # Build and test to ensure it's worth continuing
     - name: Build with Maven
@@ -94,15 +94,15 @@ jobs:
 #      run: |
 #        convert -background transparent icons/cprn-icon1024x1024.png -define icon:auto-resize=16,32,48,64,128,256 -compress zip icons/cprn-lnx.ico
 
-    - name: Setup Maven Settings
-      uses: s4u/maven-settings-action@v2.4.1
-      with:
-        servers: |
-          [{
-              "id": "maven.github.java-redcap",
-              "username": "${{ secrets.USER_4_PACKAGE_READ }}",
-              "password": "${{ secrets.TOKEN_4_PACKAGE_READ }}"
-          }]
+#    - name: Setup Maven Settings
+#      uses: s4u/maven-settings-action@v2.4.1
+#      with:
+#        servers: |
+#          [{
+#              "id": "maven.github.java-redcap",
+#              "username": "${{ secrets.USER_4_PACKAGE_READ }}",
+#              "password": "${{ secrets.TOKEN_4_PACKAGE_READ }}"
+#          }]
 
     # BUILD FOR DISTRIBUTION
     - name: Build distribution
@@ -143,15 +143,15 @@ jobs:
 #      run: |
 #        convert -background transparent icons/cprn-icon1024x1024.png -define icon:auto-resize=16,32,48,64,128,256 -compress zip icons/cprn-lnx.ico
 
-    - name: Setup Maven Settings
-      uses: s4u/maven-settings-action@v2.4.1
-      with:
-        servers: |
-          [{
-              "id": "maven.github.java-redcap",
-              "username": "${{ secrets.USER_4_PACKAGE_READ }}",
-              "password": "${{ secrets.TOKEN_4_PACKAGE_READ }}"
-          }]
+#    - name: Setup Maven Settings
+#      uses: s4u/maven-settings-action@v2.4.1
+#      with:
+#        servers: |
+#          [{
+#              "id": "maven.github.java-redcap",
+#              "username": "${{ secrets.USER_4_PACKAGE_READ }}",
+#              "password": "${{ secrets.TOKEN_4_PACKAGE_READ }}"
+#          }]
 
     # BUILD FOR DISTRIBUTION
     - name: Build distribution
@@ -192,15 +192,15 @@ jobs:
         distribution: 'adopt'
         cache: maven
 
-    - name: Setup Maven Settings
-      uses: s4u/maven-settings-action@v2.4.1
-      with:
-        servers: |
-          [{
-              "id": "maven.github.java-redcap",
-              "username": "${{ secrets.USER_4_PACKAGE_READ }}",
-              "password": "${{ secrets.TOKEN_4_PACKAGE_READ }}"
-          }]
+#    - name: Setup Maven Settings
+#      uses: s4u/maven-settings-action@v2.4.1
+#      with:
+#        servers: |
+#          [{
+#              "id": "maven.github.java-redcap",
+#              "username": "${{ secrets.USER_4_PACKAGE_READ }}",
+#              "password": "${{ secrets.TOKEN_4_PACKAGE_READ }}"
+#          }]
 
     # BUILD FOR DISTRIBUTION
     - name: Build distribution
