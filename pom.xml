@@ -108,6 +108,12 @@
 										<include>version.txt</include>
 									</includes>
 								</resource>
+								<resource>
+									<directory>${basedir}/jpackage</directory>
+									<includes>
+										<include>fop-pdf-service.service</include>
+									</includes>
+								</resource>
 							</resources>
 						</configuration>
 					</execution>
