@@ -1,0 +1,6 @@
+#!/bin/sh
+
+systemctl stop APPLICATION_PACKAGE
+systemctl disable APPLICATION_PACKAGE
+
+exit 0

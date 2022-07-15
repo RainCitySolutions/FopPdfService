@@ -1,9 +1,9 @@
-Summary: FopPdfService
-Name: fop-pdf-service
+Summary: APPLICATION_SUMMARY
+Name: APPLICATION_PACKAGE
 Version: APPLICATION_VERSION
 Release: 1
-License: BSD
-Vendor: Rain City Solutions
+License: APPLICATION_LICENSE_TYPE
+Vendor: APPLICATION_VENDOR
 
 %global FopPdfUser fop-pdf-user
 
@@ -11,7 +11,7 @@ Vendor: Rain City Solutions
 Prefix: /opt
 %endif
 
-Provides: fop-pdf-service
+Provides: APPLICATION_PACKAGE
 
 %if "x" != "x"
 Group: 
@@ -39,7 +39,7 @@ Requires(pre): shadow-utils
 %define default_filesystem / /opt /usr /usr/bin /usr/lib /usr/local /usr/local/bin /usr/local/lib
 
 %description
-FopPdfService
+APPLICATION_DESCRIPTION
 
 %prep
 
@@ -75,9 +75,13 @@ EOF_CONFIG
 
 %install
 # rm -rf %{buildroot}
-install -d -m 755 %{buildroot}/opt/%{name}
-install -d -m 755 %{buildroot}/opt/%{name}/log
-install -d -m 755 %{buildroot}/opt/%{name}/tmp
+#install -d -m 755 %{buildroot}/opt/%{name}
+#install -d -m 755 %{buildroot}/opt/%{name}/log
+#install -d -m 755 %{buildroot}/opt/%{name}/tmp
+
+install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY
+install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/log
+install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/tmp
 
 cp -r %{_sourcedir}/opt/%{name}/* %{buildroot}/opt/%{name}
 
