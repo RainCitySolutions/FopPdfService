@@ -72,7 +72,7 @@ User=%{FopPdfUser}
 Group=%{FopPdfUser}
 Type=simple
 ExecStart=APPLICATION_LAUNCHER
-WorkingDirectory=/opt/%{name}
+WorkingDirectory=APPLICATION_DIRECTORY
 Restart=always
 RestartSec=5
 StandardOutput=syslog
@@ -91,13 +91,13 @@ EOF_CONFIG
 
 %install
 # rm -rf %{buildroot}
-install -d -m 755 %{buildroot}/opt/%{name}
-install -d -m 755 %{buildroot}/opt/%{name}/log
-install -d -m 755 %{buildroot}/opt/%{name}/tmp
+#install -d -m 755 %{buildroot}/opt/%{name}
+#install -d -m 755 %{buildroot}/opt/%{name}/log
+#install -d -m 755 %{buildroot}/opt/%{name}/tmp
 
-#install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY
-#install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/log
-#install -d -m 755 %{buildroot}INSTALLATION_DIRECTORY/tmp
+install -d -m 755 %{buildroot}APPLICATION_DIRECTORY
+install -d -m 755 %{buildroot}APPLICATION_DIRECTORY/log
+install -d -m 755 %{buildroot}APPLICATION_DIRECTORY/tmp
 
 cp -r %{_sourcedir}/opt/%{name}/* %{buildroot}/opt/%{name}
 

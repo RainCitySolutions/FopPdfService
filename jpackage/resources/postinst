@@ -20,8 +20,8 @@ case "$1" in
     	useradd --system --quiet --home /opt/APPLICATION_PACKAGE \
 			--comment "User account for running the APPLICATION_PACKAGE" fop-pdf-user
 
-		echo APPLICATION_DIRECTORY
-		cp /opt/APPLICATION_PACKAGE/install -m 644 %{name}.service %{buildroot}%{_unitdir}/%{name}.service			
+		cp /opt/APPLICATION_PACKAGE/lib/app/APPLICATION_PACKAGE.service /etc/systemd/system
+		chmod 644 /etc/systemd/system/APPLICATION_PACKAGE.service   
 
 		deb-systemd-helper enable 'APPLICATION_PACKAGE.service'
 		deb-systemd-helper start 'APPLICATION_PACKAGE.service'
