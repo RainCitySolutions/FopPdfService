@@ -75,9 +75,6 @@ ExecStart=APPLICATION_LAUNCHER
 WorkingDirectory=APPLICATION_DIRECTORY
 Restart=always
 RestartSec=5
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=%n
 
 [Install]
 WantedBy=multi-user.target

@@ -21,10 +21,13 @@ case "$1" in
 			--comment "User account for running the APPLICATION_PACKAGE" fop-pdf-user
 
 		cp /opt/APPLICATION_PACKAGE/lib/app/APPLICATION_PACKAGE.service /usr/lib/systemd/system
-		chmod 644 /usr/lib/systemd/system/APPLICATION_PACKAGE.service   
+		chmod 644 /usr/lib/systemd/system/APPLICATION_PACKAGE.service
+		
+		mkdir -p /var/log/pdfGen/
+		mkdir -p /tmp/pdfGen
 
-		deb-systemd-helper enable 'APPLICATION_PACKAGE.service'
-		deb-systemd-helper start 'APPLICATION_PACKAGE.service'
+		dpkg-statoverride --update --add fop-pdf-user fop-pdf-user 4755 /var/log/pdfGen
+		dpkg-statoverride --update --add fop-pdf-user fop-pdf-user 4755 /tmp/pdfGen
 		
 		for i in /opt/APPLICATION_PACKAGE; do
 		    # only do something when no setting exists
@@ -35,6 +38,9 @@ case "$1" in
 		        fi
     		fi
 		done
+
+		deb-systemd-helper enable 'APPLICATION_PACKAGE.service'
+		deb-systemd-helper start 'APPLICATION_PACKAGE.service'
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
