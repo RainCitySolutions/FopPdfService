@@ -16,12 +16,12 @@ set -e
 
 case "$1" in
     upgrade)
-		systemctl stop APPLICATION_PACKAGE
+		deb-systemd-helper stop 'APPLICATION_PACKAGE.service'
     ;;
 
     remove|deconfigure)
-		systemctl stop APPLICATION_PACKAGE
-		systemctl disable APPLICATION_PACKAGE
+		deb-systemd-helper stop 'APPLICATION_PACKAGE.service'
+		deb-systemd-helper disable 'APPLICATION_PACKAGE.service'
     ;;
 
     failed-upgrade)

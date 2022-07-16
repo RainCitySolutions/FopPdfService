@@ -10,9 +10,6 @@ ExecStart=/opt/fop-pdf-service/bin/FopPdfService
 WorkingDirectory=/opt/fop-pdf-service
 Restart=always
 RestartSec=5
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=%n
 
 [Install]
 WantedBy=multi-user.target

@@ -17,14 +17,24 @@ set -e
 
 case "$1" in
     configure)
-    	useradd --system --quiet --home /opt/APPLICATION_PACKAGE \
+    	useradd --system --shell /bin/false --home /opt/APPLICATION_PACKAGE \
 			--comment "User account for running the APPLICATION_PACKAGE" fop-pdf-user
 
-		cp /opt/APPLICATION_PACKAGE/lib/app/APPLICATION_PACKAGE.service /etc/systemd/system
-		chmod 644 /etc/systemd/system/APPLICATION_PACKAGE.service   
+		cp /opt/APPLICATION_PACKAGE/lib/app/APPLICATION_PACKAGE.service /usr/lib/systemd/system
+		chmod 644 /usr/lib/systemd/system/APPLICATION_PACKAGE.service   
 
 		deb-systemd-helper enable 'APPLICATION_PACKAGE.service'
 		deb-systemd-helper start 'APPLICATION_PACKAGE.service'
+		
+		for i in /opt/APPLICATION_PACKAGE; do
+		    # only do something when no setting exists
+		    if ! dpkg-statoverride --list $i >/dev/null 2>&1; then
+		        #include: debconf processing, question about foo and bar
+		        if [ "$RET" = "true" ] ; then
+            		dpkg-statoverride --update --add fop-pdf-user fop-pdf-user 4755 $i
+		        fi
+    		fi
+		done
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
