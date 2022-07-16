@@ -1,0 +1,18 @@
+[Unit]
+Description=FOP PDF Service
+After=network.target
+
+[Service]
+User=fop-pdf-user
+Group=fop-pdf-user
+Type=simple
+ExecStart=/opt/fop-pdf-service/bin/FopPdfService
+WorkingDirectory=/opt/fop-pdf-service
+Restart=always
+RestartSec=5
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=%n
+
+[Install]
+WantedBy=multi-user.target

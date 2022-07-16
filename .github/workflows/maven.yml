@@ -112,8 +112,8 @@ jobs:
     - name: Install additional code
       run: |
         sudo apt-get update
-        sudo apt-get install libfreetype6 libx11-6
-        sudo cp jpackage/macros.systemd /usr/lib/rpm/macros.d/
+        #sudo apt-get install libfreetype6 libx11-6
+        #sudo cp jpackage/macros.systemd /usr/lib/rpm/macros.d/
       
     - name: Set up JDK
       uses: actions/setup-java@v2
