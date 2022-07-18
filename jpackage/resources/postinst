@@ -1,5 +1,9 @@
 #!/bin/sh
 
+FOP_USER=fop-pdf-user
+LOG_DIR=/var/log/pdfGen
+TMP_DIR=/tmp/pdfGen
+
 set -e
 
 # summary of how this script can be called:
@@ -17,24 +21,24 @@ set -e
 
 case "$1" in
     configure)
-    	useradd --system --shell /bin/false --home /opt/APPLICATION_PACKAGE \
-			--comment "User account for running the APPLICATION_PACKAGE" fop-pdf-user
+    	adduser --system --quiet --shell /bin/false --home /opt/APPLICATION_PACKAGE \
+			--comment "User account for running the APPLICATION_PACKAGE" $FOP_USER || true
 
 		cp /opt/APPLICATION_PACKAGE/lib/app/APPLICATION_PACKAGE.service /usr/lib/systemd/system
 		chmod 644 /usr/lib/systemd/system/APPLICATION_PACKAGE.service
 		
-		mkdir -p /var/log/pdfGen/
-		mkdir -p /tmp/pdfGen
+		mkdir -p $LOG_DIR
+		mkdir -p $TMP_DIR
 
-		dpkg-statoverride --update --add fop-pdf-user fop-pdf-user 4755 /var/log/pdfGen
-		dpkg-statoverride --update --add fop-pdf-user fop-pdf-user 4755 /tmp/pdfGen
+		dpkg-statoverride --update --add $FOP_USER $FOP_USER 4755 $LOG_DIR
+		dpkg-statoverride --update --add $FOP_USER $FOP_USER 4755 $TMP_DIR
 		
 		for i in /opt/APPLICATION_PACKAGE; do
 		    # only do something when no setting exists
 		    if ! dpkg-statoverride --list $i >/dev/null 2>&1; then
 		        #include: debconf processing, question about foo and bar
 		        if [ "$RET" = "true" ] ; then
-            		dpkg-statoverride --update --add fop-pdf-user fop-pdf-user 4755 $i
+            		dpkg-statoverride --update --add $FOP_USER $FOP_USER 4755 $i
 		        fi
     		fi
 		done
