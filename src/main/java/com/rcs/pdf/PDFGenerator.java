@@ -45,10 +45,7 @@ import org.apache.xmlgraphics.util.MimeConstants;
 public class PDFGenerator {
 	private Logger logger;
 	private FopFactory fopFactory;
-//	private WorkDirResolver workDirResolver;
 	private TransformerFactory transformerFactory;
-//	private Path jobLogFile;
-//	private Level logLevel;
 
 	private class LogEventListener
 		implements EventListener
@@ -65,7 +62,7 @@ public class PDFGenerator {
 			this.logLevel = logLevel;
 			this.jobId = logFile.getParent().getFileName().toString();
 
-			pdfGenMarker = MarkerManager.getMarker("HsirPdfGen");					
+			pdfGenMarker = MarkerManager.getMarker("FopPdfGen");
 		}
 
 		@Override
