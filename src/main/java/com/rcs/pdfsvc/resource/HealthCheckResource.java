@@ -27,7 +27,7 @@ public class HealthCheckResource {
 		long used = memoryBean.getHeapMemoryUsage().getUsed() / megabytes_in_bytes;
 
 		return Response.ok().entity(
-				String.format("HSIR Health Check -- <br>Initial Memory (Xms) : %d MB,<br>Used Memory : %d MB,<br>Max Memory (Xmx) : %d MB", xms, used, xmx)
+				String.format("Health Check -- <br>Initial Memory (Xms) : %d MB,<br>Used Memory : %d MB,<br>Max Memory (Xmx) : %d MB", xms, used, xmx)
 				).build();
     }
 }
