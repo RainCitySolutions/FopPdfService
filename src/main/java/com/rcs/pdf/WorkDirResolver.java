@@ -24,15 +24,20 @@ public class WorkDirResolver
 	implements ResourceResolver, URIResolver
 {
 	private Logger logger;
-	private Path tempDirPath;
+	protected Path tempDirPath;
 	private ResourceResolver parentResourceResolver;
 	private URIResolver parentURIResolver;
 
+	protected WorkDirResolver() {
+		logger = LogManager.getLogger(this.getClass());
+		parentResourceResolver = ResourceResolverFactory.createDefaultResourceResolver();
+	}
+
 	public WorkDirResolver (Path path)
 	{
-		logger = LogManager.getLogger(WorkDirResolver.class);
+		this();
+
 		tempDirPath = path;
-		parentResourceResolver = ResourceResolverFactory.createDefaultResourceResolver();
 	}
 
 	public void setURIResolver(URIResolver resolver) {

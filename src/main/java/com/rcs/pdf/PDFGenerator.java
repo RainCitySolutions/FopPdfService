@@ -39,6 +39,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.xalan.transformer.TransformerImpl;
+import org.apache.xmlgraphics.image.loader.impl.AbstractImageSessionContext;
 import org.apache.xmlgraphics.util.MimeConstants;
 
 
@@ -124,6 +125,9 @@ public class PDFGenerator {
 		
 		// Set the User-Agent for any external references in the XLST
 		System.setProperty("http.agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+
+		// Don't let FOP cache resources as they could be coming from different requests but the same resource/file name
+		System.setProperty(AbstractImageSessionContext.class.getName() + ".no-source-reuse", "true");
 		
 //		initializeFopFactory(workDirResolver);
 		initializeFopFactory();
@@ -136,7 +140,7 @@ public class PDFGenerator {
 		try (InputStream cfgStrm = PDFGenerator.class.getResourceAsStream("/fop.xconf")) {
 		    cfg = cfgBuilder.build(cfgStrm);
 
-			fopFactory = new FopFactoryBuilder(new File(".").toURI()).setConfiguration(cfg).build();
+			fopFactory = new FopFactoryBuilder(new File(".").toURI(), new ThreadWorkDirResolver()).setConfiguration(cfg).build();
 
 			transformerFactory = TransformerFactory.newInstance();
 

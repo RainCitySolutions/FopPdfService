@@ -39,6 +39,7 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 
 import com.rcs.FileCleanupManager;
 import com.rcs.pdf.PDFGenerator;
+import com.rcs.pdf.ThreadWorkDirResolver;
 import com.rcs.pdf.WorkDirResolver;
 import com.rcs.pdfsvc.config.AppResourceConfig;
 
@@ -128,12 +129,14 @@ public class Xml2PdfResource {
 //		    		PDFGenerator pdfGen = new PDFGenerator(new WorkDirResolver(tempDir), tmpLogFile, Level.toLevel(logLevel));
 		    		PDFGenerator pdfGen = PDFGenerator.getInstance();
 		    		
+		    		ThreadWorkDirResolver.setWorkDir(tempDir);
 		    		if (null != foFile) {
 		    			pdfGen.generateFromFo(tempDir.resolve(foFile), tempDir.resolve(pdfFile), new WorkDirResolver(tempDir), tmpLogFile, Level.toLevel(logLevel));
 		    		}
 		    		else {
 		    			pdfGen.generateFromXml(tempDir.resolve(xmlFile), tempDir.resolve(xsltFile), tempDir.resolve(pdfFile), new WorkDirResolver(tempDir), tmpLogFile, Level.toLevel(logLevel));
 		    		}
+		    		ThreadWorkDirResolver.removeWorkDir();
 		    		
 		    	    rewritePdf(tempDir.resolve(pdfFile).toFile());
 		    		
