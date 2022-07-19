@@ -1,8 +1,10 @@
 #!/bin/sh
 
+FOP_USER=fop-pdf-user
 APP_SVC='APPLICATION_PACKAGE.service'
 LOG_DIR=/var/log/APPLICATION_PACKAGE
 TMP_DIR=/tmp/APPLICATION_PACKAGE
+JAVA_PERFDIR=/tmp/hsperfdata_$FOP_USER
 
 set -e
 
@@ -48,35 +50,16 @@ if [ "$1" = "purge" ] ; then
 		fi
 	done
 	
-	for i in $LOG_DIR $TMP_DIR; do
+	for i in $LOG_DIR $TMP_DIR $JAVA_PERFDIR; do
 		[ -d $i ] && rm -rf $i
 	done
 	
+	rm/usr/lib/systemd/system/APPLICATION_PACKAGE.service
+
 fi
 
 if [ "$1" = "upgrade" ]; then
 	echo "Not doing anything for 'upgrade'"
 fi
 
-#case "$1" in
-#    upgrade|failed-upgrade|abort-upgrade)
-#		deb-systemd-helper start 'APPLICATION_PACKAGE.service' || true
-#    ;;
-#
-#    purge|remove|abort-install|disappear)
-#    	[ -f /usr/lib/systemd/system/APPLICATION_PACKAGE.service ] && rm /usr/lib/systemd/system/APPLICATION_PACKAGE.service
-#    	
-#    	for i in /opt/APPLICATION_PACKAGE; do
-#		    if dpkg-statoverride --list $i >/dev/null 2>&1; then
-#		        dpkg-statoverride --remove $i
-#		    fi
-#		done
-#    ;;
-
-#    *)
-#        echo "postrm called with unknown argument \`$1'" >&2
-#        exit 1
-#    ;;
-#esac
-
-#exit 0
+exit 0
