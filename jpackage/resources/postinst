@@ -40,7 +40,7 @@ case "$1" in
 		        if [ "$RET" = "true" ] ; then
             		dpkg-statoverride --update --add $FOP_USER $FOP_USER 4755 $i
             	else
-            		echo RET is false, not setting ownership for $i
+            		echo "RET ($RET) is false, not setting ownership for $i"
 		        fi
     		fi
 		done
@@ -71,7 +71,7 @@ if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade"] || [ "$1" = "abort-deconf
 		else
 			_dh_action=start
 		fi
-		deb-systemd_invoke $_dh_action 'APPLICATION_PACKAGE.service' >/dev/null || true
+		deb-systemd-invoke $_dh_action 'APPLICATION_PACKAGE.service' >/dev/null || true
 	fi
 fi
 
