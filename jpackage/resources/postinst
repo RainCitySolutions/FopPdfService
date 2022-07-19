@@ -19,12 +19,12 @@ set -e
 # the debian-policy package
 
 
-echo "Handling $1 in postinst"
+echo "Handling $1 from $0"
 
 case "$1" in
     configure)
     	adduser --system --quiet --shell /bin/false --home /opt/APPLICATION_PACKAGE \
-			--comment "User account for running the APPLICATION_PACKAGE" $FOP_USER || true
+			-c "User account for running the APPLICATION_PACKAGE" $FOP_USER || true
 
 		cp /opt/APPLICATION_PACKAGE/lib/app/APPLICATION_PACKAGE.service /usr/lib/systemd/system
 		chmod 644 /usr/lib/systemd/system/APPLICATION_PACKAGE.service

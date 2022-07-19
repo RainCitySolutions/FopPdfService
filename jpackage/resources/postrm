@@ -1,5 +1,9 @@
 #!/bin/sh
 
+APP_SVC='APPLICATION_PACKAGE.service'
+LOG_DIR=/var/log/pdfGen
+TMP_DIR=/tmp/pdfGen
+
 set -e
 
 # summary of how this script can be called:
@@ -16,28 +20,37 @@ set -e
 # the debian-policy package
 
 
-echo "Handling $1 in postrm"
-
-if [ "$1" = "remove" ] && [ -d /run/systemd/system ]; then
-	systemctrl --system daemon-reload >/dev/null || true
-fi
+echo "Handling $1 from $0"
 
 if [ "$1" = "remove" ]; then
+	if [ -d /run/systemd/system ]; then
+		systemctrl --system daemon-reload >/dev/null || true
+	fi
+
 	if [ -x "/usr/bin/deb-systemd-helper" ]; then
-		deb-systemd-helper mask 'APPLICATION_PACKAGE.service' >/dev/null || true
+		deb-systemd-helper mask $APP_SVC >/dev/null || true
 	fi
 fi
 
 if [ "$1" = "purge" ] ; then
 	if [ -x "/usr/bin/deb-systemd-helper" ]; then
-		deb-systemd-helper purge 'APPLICATION_PACKAGE.service' >/dev/null || true
-		deb-systemd-helper unmask 'APPLICATION_PACKAGE.service' >/dev/null || true
+		deb-systemd-helper purge $APP_SVC >/dev/null || true
+		deb-systemd-helper unmask $APP_SVC >/dev/null || true
 	fi
 
+	if [ -z "${DPKG_ROOT:-}" ]; then
+		update-rc.d APPLICATION_PACKAGE remove >/dev/null
+	fi
+fi
+
+if [ "$1" = "upgrade" ]; then
+	dpkg-statoverride --remove $LOG_DIR
+	dpkg-statoverride --remove $TMP_DIR
+
 	for i in /opt/APPLICATION_PACKAGE; do
-    if dpkg-statoverride --list $i >/dev/null 2>&1; then
-	        dpkg-statoverride --remove $i
-	    fi
+		if dpkg-statoverride --list $i >/dev/null 2>&1; then
+			dpkg-statoverride --remove $i
+		fi
 	done
 fi
 

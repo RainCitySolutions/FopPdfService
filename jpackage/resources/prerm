@@ -1,5 +1,6 @@
 #!/bin/sh
 
+APP_SVC=APPLICATION_PACKAGE.service
 set -e
 
 # summary of how this script can be called:
@@ -14,33 +15,20 @@ set -e
 # the debian-policy package
 
 
-echo "Handling $1 in prem"
+echo "Handling $1 from $0"
 
-if [ "$1" = "remove" ] && [ -d /run/systemd/system ]; then
-	systemctl stop 'APPLICATION_PACKAGE.service' || true
+if [ "$1" = "remove" ]; then
+	if [ -d /run/systemd/system ]; then
+		systemctl stop 'APPLICATION_PACKAGE.service' || true
+	fi
+
+	if [ -z "${DPKG_ROOT:-}" ] && [ -d /run/systemd/system ]; then
+		deb-systemd-invoke stop 'APPLICATION_PACKAGE.service' >/dev/null || true
+	fi
+
+	if [ -z "${DPKG_ROOT:-}" ] && [ -x /etc/init.d/APPLICATION_PACKAGE ]; then
+		invoke-rd.d --skip-systemd-native $APPLICATION_PACKAGE stop || true
+	fi
 fi
-
-if [ "$1" = "remove" ] && [ -z "${DPKG_ROOT:-}" ] && [ -d /run/systemd/system ]; then
-	deb-systemd-invoke stop 'APPLICATION_PACKAGE.service' >/dev/null || true
-fi
-
-#case "$1" in
-#    upgrade)
-#		deb-systemd-helper stop 'APPLICATION_PACKAGE.service' || true
-#    ;;
-#
-#    remove|deconfigure)
-#		deb-systemd-helper stop 'APPLICATION_PACKAGE.service' || true
-#		deb-systemd-helper disable 'APPLICATION_PACKAGE.service' || true
-#    ;;
-#
-#    failed-upgrade)
-#    ;;
-#
-#    *)
-#        echo "prerm called with unknown argument \`$1'" >&2
-#        exit 1
-#    ;;
-#esac
 
 exit 0
