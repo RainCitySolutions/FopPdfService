@@ -1,8 +1,8 @@
 #!/bin/sh
 
 APP_SVC='APPLICATION_PACKAGE.service'
-LOG_DIR=/var/log/pdfGen
-TMP_DIR=/tmp/pdfGen
+LOG_DIR=/var/log/APPLICATION_PACKAGE
+TMP_DIR=/tmp/APPLICATION_PACKAGE
 
 set -e
 
@@ -41,21 +41,22 @@ if [ "$1" = "purge" ] ; then
 	if [ -z "${DPKG_ROOT:-}" ]; then
 		update-rc.d APPLICATION_PACKAGE remove >/dev/null
 	fi
+
+	for i in $LOG_DIR $TMP_DIR; do
+		if dpkg-statoverride --list $i >/dev/null 2>&1; then
+			dpkg-statoverride --remove $i
+		else
+			echo $i not in override list
+		fi
+	done
 	
-	[ -d $LOG_DIR ] && rm -rf $LOG_DIR
-	[ -d $TMP_DIR ] && rm -rf $TMP_DIR
+	for i in $LOG_DIR $TMP_DIR; do
+		[ -d $i ] && rm -rf $i
+	done
 	
 fi
 
 if [ "$1" = "upgrade" ]; then
-	dpkg-statoverride --remove $LOG_DIR
-	dpkg-statoverride --remove $TMP_DIR
-
-	for i in /opt/APPLICATION_PACKAGE; do
-		if dpkg-statoverride --list $i >/dev/null 2>&1; then
-			dpkg-statoverride --remove $i
-		fi
-	done
 fi
 
 #case "$1" in

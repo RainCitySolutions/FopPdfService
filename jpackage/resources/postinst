@@ -1,8 +1,8 @@
 #!/bin/sh
 
 FOP_USER=fop-pdf-user
-LOG_DIR=/var/log/pdfGen
-TMP_DIR=/tmp/pdfGen
+LOG_DIR=/var/log/APPLICATION_PACKAGE
+TMP_DIR=/tmp/APPLICATION_PACKAGE
 
 set -e
 
@@ -29,18 +29,18 @@ case "$1" in
 		cp /opt/APPLICATION_PACKAGE/lib/app/APPLICATION_PACKAGE.service /usr/lib/systemd/system
 		chmod 644 /usr/lib/systemd/system/APPLICATION_PACKAGE.service
 		
-		[ -d $LOG_DIR ] || mkdir -p $LOG_DIR
-		[ -d $TMP_DIR ] || mkdir -p $TMP_DIR
+		for i in $LOG_DIR $TMP_DIR; do
+			[ -d $i ] || mkdir -p $i
+		done
 
-		dpkg-statoverride --update --add $FOP_USER $FOP_USER 4755 $LOG_DIR
-		dpkg-statoverride --update --add $FOP_USER $FOP_USER 4755 $TMP_DIR
-		
-		for i in /opt/APPLICATION_PACKAGE; do
+		for i in $LOG_DIR $TMP_DIR; do
 		    # only do something when no setting exists
 		    if ! dpkg-statoverride --list $i >/dev/null 2>&1; then
 		        #include: debconf processing, question about foo and bar
 		        if [ "$RET" = "true" ] ; then
             		dpkg-statoverride --update --add $FOP_USER $FOP_USER 4755 $i
+            	else
+            		echo RET is false, not setting ownership for $i
 		        fi
     		fi
 		done
@@ -55,7 +55,7 @@ case "$1" in
     ;;
 esac
 
-if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ]; then
+if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade"] || [ "$1" = "abort-deconfigure" ] || [ "$1" = "abort-remove" ]; then
 	deb-systemd-helper unmask 'APPLICATION_PACKAGE.service' >/dev/null || true
 	
 	if deb-systemd-helper --quiet was-enabled 'APPLICATION_PACKAGE.service'; then
@@ -71,8 +71,8 @@ if [ "$1" = "configure" ] || [ "$1" = "abort-upgrade] || [ "$1" = "abort-deconfi
 		else
 			_dh_action=start
 		fi
-		deb_systemd_invoke $_dh_action 'APPLICATION_PACKAGE.service' >/dev/null || true
+		deb-systemd_invoke $_dh_action 'APPLICATION_PACKAGE.service' >/dev/null || true
 	fi
-if
+fi
 
 exit 0

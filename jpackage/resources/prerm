@@ -1,6 +1,5 @@
 #!/bin/sh
 
-APP_SVC=APPLICATION_PACKAGE.service
 set -e
 
 # summary of how this script can be called:
