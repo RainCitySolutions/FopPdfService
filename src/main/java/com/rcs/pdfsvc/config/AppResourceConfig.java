@@ -22,7 +22,7 @@ public class AppResourceConfig
 	
 	public AppResourceConfig(AppProperties props)
 	{
-		setApplicationName("HSIR PDF Service");
+		setApplicationName("FOP PDF Service");
 
 		packages("com.rcs.pdfsvc.resource");
 
