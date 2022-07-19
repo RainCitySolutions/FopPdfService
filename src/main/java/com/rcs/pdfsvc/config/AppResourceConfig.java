@@ -11,7 +11,6 @@ import org.glassfish.jersey.server.ServerProperties;
 import com.rcs.monitor.FopPdfAppEventListener;
 import jakarta.ws.rs.ApplicationPath;
 
-//@ApplicationPath("webapi")
 @ApplicationPath("/")
 public class AppResourceConfig
 	extends ResourceConfig
