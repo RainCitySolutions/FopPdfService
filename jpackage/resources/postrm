@@ -54,12 +54,12 @@ if [ "$1" = "purge" ] ; then
 		[ -d $i ] && rm -rf $i
 	done
 	
-	rm/usr/lib/systemd/system/APPLICATION_PACKAGE.service
-
+	rm /usr/lib/systemd/system/APPLICATION_PACKAGE.service
 fi
 
 if [ "$1" = "upgrade" ]; then
-	echo "Not doing anything for 'upgrade'"
+	echo ""
+	# "Not doing anything for 'upgrade'"
 fi
 
 exit 0
