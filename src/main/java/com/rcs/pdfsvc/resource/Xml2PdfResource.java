@@ -126,7 +126,6 @@ public class Xml2PdfResource {
 		    		java.nio.file.Path tmpLogFile = tempDir.resolve(LOG_FILE);
 
 		    		// Initialize the PDF Generator
-//		    		PDFGenerator pdfGen = new PDFGenerator(new WorkDirResolver(tempDir), tmpLogFile, Level.toLevel(logLevel));
 		    		PDFGenerator pdfGen = PDFGenerator.getInstance();
 		    		
 		    		ThreadWorkDirResolver.setWorkDir(tempDir);

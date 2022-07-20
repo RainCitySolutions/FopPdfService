@@ -16,7 +16,6 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamSource;
 
@@ -143,6 +142,7 @@ public class PDFGenerator {
 			fopFactory = new FopFactoryBuilder(new File(".").toURI(), new ThreadWorkDirResolver()).setConfiguration(cfg).build();
 
 			transformerFactory = TransformerFactory.newInstance();
+			transformerFactory.setURIResolver(new ThreadWorkDirResolver());
 
 		} catch (IOException | ConfigurationException e) {
 			logger.catching(Level.ERROR, e);
@@ -208,7 +208,7 @@ public class PDFGenerator {
 					((TransformerImpl)transformer).setDebug(true);
 				}
 	
-				transformer.setURIResolver(workDirResolver);
+//				transformer.setURIResolver(workDirResolver);
 				transformer.transform(src, res);
 			}
 		} catch (Exception e) {
@@ -236,8 +236,8 @@ public class PDFGenerator {
 				Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, outStrm);
 
 				Source xsltSrc = new StreamSource(Files.newInputStream(xsltFile));
-				URIResolver orgResolver = transformerFactory.getURIResolver();
-				transformerFactory.setURIResolver(workDirResolver);
+//				URIResolver orgResolver = transformerFactory.getURIResolver();
+//				transformerFactory.setURIResolver(workDirResolver);
 				Transformer transformer = transformerFactory.newTransformer(xsltSrc);
 				if (null != transformer) {
 					// Set the value of a <param> in the stylesheet
@@ -249,18 +249,18 @@ public class PDFGenerator {
 					// Resulting SAX events (the generated FO) must be piped through to FOP
 					Result res = new SAXResult(fop.getDefaultHandler());
 		
-					// Start XSLT transformation and FOP processing
-					if (transformer instanceof TransformerImpl) {
-						((TransformerImpl)transformer).setDebug(true);
-					}
-
-					transformer.setURIResolver(workDirResolver);
+//					transformer.setURIResolver(workDirResolver);
 					transformer.transform(xmlSrc, res);
+//					transformer.reset();
 				}
 				else {
 					
 				}
-				transformerFactory.setURIResolver(orgResolver);
+/*				
+				if (null != orgResolver) {
+					transformerFactory.setURIResolver(orgResolver);
+				}
+*/				
 			}
 			catch (TransformerException te) {
 				logger.catching(Level.ERROR, te);
