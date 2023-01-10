@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.transform.TransformerException;
+
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -42,6 +44,7 @@ import com.rcs.pdf.PDFGenerator;
 import com.rcs.pdf.ThreadWorkDirResolver;
 import com.rcs.pdf.WorkDirResolver;
 import com.rcs.pdfsvc.config.AppResourceConfig;
+
 
 
 @Path("xml2pdf")
@@ -96,7 +99,7 @@ public class Xml2PdfResource {
     	
     	// Check if a PDF filename, and a source file or files were provided
     	if (null != pdfFile && null != bodyParts && null != fileDispositions) {
-    		Set<String> filenames = new HashSet<String>();
+    		Set<String> filenames = new HashSet<>();
     		
     		// Create a set of filenames that were sent
     		for (FormDataContentDisposition contentDisp : fileDispositions) {
@@ -147,13 +150,13 @@ public class Xml2PdfResource {
 		    		
 		    		URI pdfUri = uriBldr.build();
 		    		
-		    		logger.info("Successfully created PDF: {}",  pdfUri.toString());
+		    		logger.info("Successfully created PDF: {}",  pdfUri);
 
 		    		resp = Response
 		    				.created(pdfUri)
 		    				.entity(Files.exists(tmpLogFile) ? new String(Files.readAllBytes(tmpLogFile)) : "Log not available")
 		    				.build();
-				} catch (IOException e) {
+				} catch (IOException | TransformerException e) {
 		    		logger.catching(e);
 					resp = Response.serverError().build();
 				}
@@ -194,7 +197,7 @@ public class Xml2PdfResource {
     	int i = srcFile.getName().lastIndexOf('.');
     	String name = srcFile.getName().substring(0,i);
 
-    	return new File(srcFile.getParent() + "/" + name + newExtension);
+    	return new File(srcFile.getParent() + File.separator + name + newExtension);
     }
     
     /**
