@@ -37,7 +37,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
-import org.apache.xalan.transformer.TransformerImpl;
 import org.apache.xmlgraphics.image.loader.impl.AbstractImageSessionContext;
 import org.apache.xmlgraphics.util.MimeConstants;
 
@@ -50,7 +49,7 @@ public class PDFGenerator {
 	private class LogEventListener
 		implements EventListener
 	{
-		private Set<String> msgSet = new HashSet<String>();
+		private Set<String> msgSet = new HashSet<>();
 		private String logFile;
 		private Level logLevel;
 		private String jobId;
@@ -179,7 +178,7 @@ public class PDFGenerator {
 		return foUserAgent;
 	}
 
-	public void generateFromFo (final Path foFile, Path pdfFile, final WorkDirResolver workDirResolver, final Path jobLogFile, final Level logLevel)
+	public void generateFromFo (final Path foFile, Path pdfFile, final WorkDirResolver workDirResolver, final Path jobLogFile, final Level logLevel) throws TransformerException
 	{
 		logger.traceEntry();
 
@@ -203,24 +202,20 @@ public class PDFGenerator {
 				// Resulting SAX events (the generated FO) must be piped through to FOP
 				Result res = new SAXResult(fop.getDefaultHandler());
 		
-				// Start XSLT transformation and FOP processing
-				if (transformer instanceof TransformerImpl) {
-					((TransformerImpl)transformer).setDebug(true);
-				}
-	
 //				transformer.setURIResolver(workDirResolver);
 				transformer.transform(src, res);
 			}
 		} catch (Exception e) {
 			logger.catching(Level.ERROR, e);
 			e.printStackTrace(System.err);
+			throw new TransformerException(e);
 		}
 
 		logger.traceExit();
 	}
 
 
-	public void generateFromXml (final Path xmlFile, final Path xsltFile, final Path pdfFile, final WorkDirResolver workDirResolver, final Path jobLogFile, final Level logLevel)
+	public void generateFromXml (final Path xmlFile, final Path xsltFile, final Path pdfFile, final WorkDirResolver workDirResolver, final Path jobLogFile, final Level logLevel) throws TransformerException
 	{
 		logger.traceEntry();
 
@@ -264,9 +259,11 @@ public class PDFGenerator {
 			}
 			catch (TransformerException te) {
 				logger.catching(Level.ERROR, te);
+				throw te;
 			}
 		} catch (Exception e) {
 			logger.catching(Level.ERROR, e);
+			throw new TransformerException(e);
 		}
 
 		logger.traceExit();
