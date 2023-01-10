@@ -13,6 +13,22 @@ import java.util.concurrent.TimeUnit;
 
 import javax.xml.transform.TransformerException;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.glassfish.jersey.media.multipart.BodyPartEntity;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
+
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfReader;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.rcs.FileCleanupManager;
+import com.rcs.pdf.PDFGenerator;
+import com.rcs.pdf.ThreadWorkDirResolver;
+import com.rcs.pdfsvc.config.AppResourceConfig;
+
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -26,24 +42,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.Response.Status;
 import jakarta.ws.rs.core.UriBuilder;
 import jakarta.ws.rs.core.UriInfo;
-
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.glassfish.jersey.media.multipart.BodyPartEntity;
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
-import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
-import org.glassfish.jersey.media.multipart.FormDataParam;
-
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfReader;
-import com.itextpdf.kernel.pdf.PdfWriter;
-
-import com.rcs.FileCleanupManager;
-import com.rcs.pdf.PDFGenerator;
-import com.rcs.pdf.ThreadWorkDirResolver;
-import com.rcs.pdf.WorkDirResolver;
-import com.rcs.pdfsvc.config.AppResourceConfig;
 
 
 
@@ -133,10 +131,10 @@ public class Xml2PdfResource {
 		    		
 		    		ThreadWorkDirResolver.setWorkDir(tempDir);
 		    		if (null != foFile) {
-		    			pdfGen.generateFromFo(tempDir.resolve(foFile), tempDir.resolve(pdfFile), new WorkDirResolver(tempDir), tmpLogFile, Level.toLevel(logLevel));
+		    			pdfGen.generateFromFo(tempDir.resolve(foFile), tempDir.resolve(pdfFile), tmpLogFile, Level.toLevel(logLevel));
 		    		}
 		    		else {
-		    			pdfGen.generateFromXml(tempDir.resolve(xmlFile), tempDir.resolve(xsltFile), tempDir.resolve(pdfFile), new WorkDirResolver(tempDir), tmpLogFile, Level.toLevel(logLevel));
+		    			pdfGen.generateFromXml(tempDir.resolve(xmlFile), tempDir.resolve(xsltFile), tempDir.resolve(pdfFile), tmpLogFile, Level.toLevel(logLevel));
 		    		}
 		    		ThreadWorkDirResolver.removeWorkDir();
 		    		

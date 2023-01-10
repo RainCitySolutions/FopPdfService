@@ -117,17 +117,17 @@ public class PDFGenerator {
 		
 	}
 
-//	private PDFGenerator(WorkDirResolver workDirResolver, Path jobLogFile, Level logLevel) {
 	private PDFGenerator() {
 		this.logger = LogManager.getLogger(PDFGenerator.class.getName());
 		
 		// Set the User-Agent for any external references in the XLST
-		System.setProperty("http.agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11");
+		// Replaced 20230110 - "http.agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.95 Safari/537.11"
+		// 20230110 - Update User-Agent, old one results in "Unexpected end of file from server" error trying to fetch images from a web server. Key seems to be the version of Chrome specified, specifically version 52 or eariler.  
+		System.setProperty("http.agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36");
 
 		// Don't let FOP cache resources as they could be coming from different requests but the same resource/file name
 		System.setProperty(AbstractImageSessionContext.class.getName() + ".no-source-reuse", "true");
 		
-//		initializeFopFactory(workDirResolver);
 		initializeFopFactory();
 	}
 
@@ -148,24 +148,6 @@ public class PDFGenerator {
 		}
 	}
 
-	/*
-	 * private void initializeFopFactory (WorkDirResolver workDirResolver) {
-	 * DefaultConfigurationBuilder cfgBuilder = new DefaultConfigurationBuilder();
-	 * Configuration cfg; try (InputStream cfgStrm =
-	 * PDFGenerator.class.getResourceAsStream("/fop.xconf")) { cfg =
-	 * cfgBuilder.build(cfgStrm);
-	 * 
-	 * this.workDirResolver = workDirResolver; fopFactory = new
-	 * FopFactoryBuilder(new File(".").toURI(),
-	 * workDirResolver).setConfiguration(cfg).build();
-	 * 
-	 * transformerFactory = TransformerFactory.newInstance();
-	 * 
-	 * } catch (IOException | ConfigurationException e) {
-	 * logger.catching(Level.ERROR, e); } }
-	 * 
-	 */
-	
 	private FOUserAgent createFOUserAgent(Path jobLogFile, Level logLevel) {
 		logger.traceEntry();
 
@@ -178,7 +160,7 @@ public class PDFGenerator {
 		return foUserAgent;
 	}
 
-	public void generateFromFo (final Path foFile, Path pdfFile, final WorkDirResolver workDirResolver, final Path jobLogFile, final Level logLevel) throws TransformerException
+	public void generateFromFo (final Path foFile, Path pdfFile, final Path jobLogFile, final Level logLevel) throws TransformerException
 	{
 		logger.traceEntry();
 
@@ -202,7 +184,6 @@ public class PDFGenerator {
 				// Resulting SAX events (the generated FO) must be piped through to FOP
 				Result res = new SAXResult(fop.getDefaultHandler());
 		
-//				transformer.setURIResolver(workDirResolver);
 				transformer.transform(src, res);
 			}
 		} catch (Exception e) {
@@ -215,7 +196,7 @@ public class PDFGenerator {
 	}
 
 
-	public void generateFromXml (final Path xmlFile, final Path xsltFile, final Path pdfFile, final WorkDirResolver workDirResolver, final Path jobLogFile, final Level logLevel) throws TransformerException
+	public void generateFromXml (final Path xmlFile, final Path xsltFile, final Path pdfFile, final Path jobLogFile, final Level logLevel) throws TransformerException
 	{
 		logger.traceEntry();
 
@@ -231,8 +212,6 @@ public class PDFGenerator {
 				Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, outStrm);
 
 				Source xsltSrc = new StreamSource(Files.newInputStream(xsltFile));
-//				URIResolver orgResolver = transformerFactory.getURIResolver();
-//				transformerFactory.setURIResolver(workDirResolver);
 				Transformer transformer = transformerFactory.newTransformer(xsltSrc);
 				if (null != transformer) {
 					// Set the value of a <param> in the stylesheet
@@ -244,18 +223,8 @@ public class PDFGenerator {
 					// Resulting SAX events (the generated FO) must be piped through to FOP
 					Result res = new SAXResult(fop.getDefaultHandler());
 		
-//					transformer.setURIResolver(workDirResolver);
 					transformer.transform(xmlSrc, res);
-//					transformer.reset();
 				}
-				else {
-					
-				}
-/*				
-				if (null != orgResolver) {
-					transformerFactory.setURIResolver(orgResolver);
-				}
-*/				
 			}
 			catch (TransformerException te) {
 				logger.catching(Level.ERROR, te);
