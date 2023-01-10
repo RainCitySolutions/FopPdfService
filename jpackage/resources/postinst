@@ -36,7 +36,7 @@ case "$1" in
 		for i in $LOG_DIR $TMP_DIR; do
 		    # only do something when no setting exists
 		    if ! dpkg-statoverride --list $i >/dev/null 2>&1; then
-        		dpkg-statoverride --update --add $FOP_USER $FOP_USER 4755 $i
+        		dpkg-statoverride --update --add $FOP_USER $FOP_USER 755 $i
     		fi
 		done
     ;;
