@@ -31,7 +31,9 @@ public class FopPdfService {
 
     /**
      * Main method.
-     * @param args
+     *
+     * @param args Array of arguments for the application.
+     *
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
@@ -41,7 +43,7 @@ public class FopPdfService {
 		AppProperties props = new AppProperties();
 
 		// Set config properties for Log4J
-	    MainMapLookup.setMainArguments(new String[] {"logdir", props.getLogDir().toString()});
+	    MainMapLookup.setMainArguments("logdir", props.getLogDir().toString());
 	    
 	    Files.createDirectories(props.getWorkDir());
 	    
@@ -87,11 +89,8 @@ public class FopPdfService {
         // exposing the Jersey application at BASE_URI
         server = GrizzlyHttpServerFactory.createHttpServer((URI)rc.getProperty(AppResourceConfig.BASE_URI), rc);
         
-
-
-        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-            public void run() {
-                System.out.println("Shutting down server");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                System.out.println("Shutting down server");		// NOSONAR - No logger available at this point
 
                 scheduler.shutdown();
                 
@@ -99,16 +98,18 @@ public class FopPdfService {
 	                GrizzlyFuture<HttpServer> future = server.shutdown();
 	
 	                while (!future.isDone()) {
-	                    System.out.println("Waiting for server to shutdown");
+	                    System.out.println("Waiting for server to shutdown");	// NOSONAR - No logger available at this point
 	                    try {
 	                    	Thread.sleep(1000);
 	                    }
-	                    catch (Exception e) {}
+	                    catch (InterruptedException e) {
+	                        System.out.println("Exception waiting for server to shutdown: " + e.getMessage());	// NOSONAR - No logger available at this point
+	                        Thread.currentThread().interrupt();
+	                    }
 	                }
                 }
 
-                System.out.println("Server has finished shutting down");
-            }
+                System.out.println("Server has finished shutting down");	// NOSONAR - No logger available at this point
         }));
     }
 

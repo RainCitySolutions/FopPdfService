@@ -230,7 +230,7 @@ public class PDFGenerator {
 				logger.catching(Level.ERROR, te);
 				throw te;
 			}
-		} catch (Exception e) {
+		} catch (IOException | FOPException e) {
 			logger.catching(Level.ERROR, e);
 			throw new TransformerException(e);
 		}

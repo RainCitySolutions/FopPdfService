@@ -154,9 +154,12 @@ public class Xml2PdfResource {
 		    				.created(pdfUri)
 		    				.entity(Files.exists(tmpLogFile) ? new String(Files.readAllBytes(tmpLogFile)) : "Log not available")
 		    				.build();
-				} catch (IOException | TransformerException e) {
-		    		logger.catching(e);
-					resp = Response.serverError().build();
+				}
+				catch (IOException | TransformerException e) {
+					logger.catching(e);
+
+					final String msg = (null == e.getCause()) ? e.getMessage() : e.getCause().getMessage();
+					resp = Response.status(Status.BAD_REQUEST).entity(msg).build();
 				}
 	    	}
         	else {

@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -54,9 +55,13 @@ public class WorkDirResolver
 		InputStream is = null;
 		try {
 			is = Files.newInputStream(file);
-		} catch (IOException e) {
+		} catch (NoSuchFileException nsfe) {
+			throw new TransformerException("File not found: " + Path.of(nsfe.getFile()).getFileName().toString());
+		}
+		catch (IOException e) {
 			logger.catching(Level.ERROR, e);
 		}
+
 		if (null != is) {
 			src = new StreamSource(is);
 		}
