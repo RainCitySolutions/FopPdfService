@@ -177,7 +177,7 @@ jobs:
       id: build_image
       with:
         cpu: cortex-a7
-        base_image: 'raspi_4_bullseye:20230102'
+        base_image: 'https://raspi.debian.net/tested/20230102_raspi_4_bullseye.img.xz'
         commands: |
             mvn -B package --file pom.xml
             jpackage --verbose --type deb --app-version ${{ needs.build-test.outputs.release_version }} "@jpackage/jpackage.cfg" "@jpackage/jpackage-linux.cfg"
