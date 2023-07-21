@@ -144,6 +144,55 @@ jobs:
 
 
 
+  build-linux-deb-arm64-installer:
+    name: Build Linux DEB ARM64 Installer on Ubuntu
+    runs-on: ubuntu-20.04
+    needs: [build-test]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install additional code
+      run: |
+        sudo apt-get update
+        #sudo apt-get install libfreetype6 libx11-6
+        #sudo cp jpackage/macros.systemd /usr/lib/rpm/macros.d/
+      
+    - name: Set up JDK
+      uses: actions/setup-java@v2
+      with:
+        java-version: '16'
+        distribution: 'adopt'
+        cache: maven
+         
+    # Create the icon set for use by the application
+#    - name: Create Icon Set
+#      run: |
+#        convert -background transparent icons/cprn-icon1024x1024.png -define icon:auto-resize=16,32,48,64,128,256 -compress zip icons/cprn-lnx.ico
+
+    # BUILD FOR DISTRIBUTION
+    - name: Build distribution
+      uses: pguyot/arm-runner-action@v2
+      id: build_image
+      with:
+        base_image: raspi_4_bullseye:20230102
+        cpu: cortex-a7
+        commands: |
+            mvn -B package --file pom.xml
+            jpackage --verbose --type deb --app-version ${{ needs.build-test.outputs.release_version }} "@jpackage/jpackage.cfg" "@jpackage/jpackage-linux.cfg"
+            mv ./target/dist/fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_arm64.deb ./target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
+
+    # SAVE INSTALLER
+    - name: Upload installer
+      uses: actions/upload-artifact@v2
+      with:
+        path: ./target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
+        name: linux-deb-arm64-installer
+        retention-days: 1
+
+
+
   build-linux-app-image:
     if: ${{ false }}  # disable for now
     name: Build Linux ZIP Image on Ubuntu
@@ -230,7 +279,7 @@ jobs:
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: [build-test, build-linux-rpm-installer, build-linux-deb-installer]
+    needs: [build-test, build-linux-rpm-installer, build-linux-deb-installer, build-linux-deb-arm64-installer]
 
     steps:
     # DOWNLOAD INSTALLERS
@@ -243,6 +292,11 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: linux-deb-installer
+
+    - name: Download Linux DEB ARM64 installer
+      uses: actions/download-artifact@v2
+      with:
+        name: linux-deb-arm64-installer
 
     - name: Download Windows package
       if: ${{ false }}  # disable for now
