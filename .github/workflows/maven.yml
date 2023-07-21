@@ -146,7 +146,7 @@ jobs:
 
   build-linux-deb-arm64-installer:
     name: Build Linux DEB ARM64 Installer on Ubuntu
-    runs-on: ubuntu-20.04
+    runs-on: buildjet-2vcpu-ubuntu-2004
     needs: [build-test]
 
     steps:
@@ -173,18 +173,10 @@ jobs:
 
     # BUILD FOR DISTRIBUTION
     - name: Build distribution
-      uses: pguyot/arm-runner-action@v2.5.2
-      id: build_image
-      with:
-        cpu: cortex-a7
-        base_image: 'https://raspi.debian.net/tested/20230102_raspi_4_bullseye.img.xz'
-        commands: |
-            java -version
-            apt-get update
-            apt-get install maven
-            mvn -B package --file pom.xml
-            jpackage --verbose --type deb --app-version ${{ needs.build-test.outputs.release_version }} "@jpackage/jpackage.cfg" "@jpackage/jpackage-linux.cfg"
-            mv ./target/dist/fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_arm64.deb ./target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
+      run: |
+        mvn -B package --file pom.xml
+        jpackage --verbose --type deb --app-version ${{ needs.build-test.outputs.release_version }} "@jpackage/jpackage.cfg" "@jpackage/jpackage-linux.cfg"
+        mv ./target/dist/fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_arm64.deb ./target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
 
     # SAVE INSTALLER
     - name: Upload installer
