@@ -179,8 +179,9 @@ jobs:
         cpu: cortex-a7
         base_image: 'https://raspi.debian.net/tested/20230102_raspi_4_bullseye.img.xz'
         commands: |
-            sudo apt-get update
-            sudo apt-get install maven
+            java -version
+            apt-get update
+            apt-get install maven
             mvn -B package --file pom.xml
             jpackage --verbose --type deb --app-version ${{ needs.build-test.outputs.release_version }} "@jpackage/jpackage.cfg" "@jpackage/jpackage-linux.cfg"
             mv ./target/dist/fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_arm64.deb ./target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
