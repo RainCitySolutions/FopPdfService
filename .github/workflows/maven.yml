@@ -146,7 +146,7 @@ jobs:
 
   build-linux-deb-arm64-installer:
     name: Build Linux DEB ARM64 Installer on Ubuntu
-    runs-on: buildjet-2vcpu-ubuntu-2004-arm
+    runs-on: buildjet-2vcpu-ubuntu-2204-arm
     needs: [build-test]
 
     steps:
