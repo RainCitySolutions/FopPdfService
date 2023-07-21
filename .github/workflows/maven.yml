@@ -176,7 +176,7 @@ jobs:
       uses: pguyot/arm-runner-action@v2
       id: build_image
       with:
-        base_image: raspi_4_bullseye:20230102
+        base_image: "raspi_4_bullseye:20230102"
         cpu: cortex-a7
         commands: |
             mvn -B package --file pom.xml
