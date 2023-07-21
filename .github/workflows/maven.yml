@@ -173,11 +173,10 @@ jobs:
 
     # BUILD FOR DISTRIBUTION
     - name: Build distribution
-      uses: pguyot/arm-runner-action@v2
+      uses: pguyot/arm-runner-action@v2.5.2
       id: build_image
       with:
-        base_image: "raspi_4_bullseye:20230102"
-        cpu: cortex-a7
+        base_image: raspi_4_bullseye:20230102
         commands: |
             mvn -B package --file pom.xml
             jpackage --verbose --type deb --app-version ${{ needs.build-test.outputs.release_version }} "@jpackage/jpackage.cfg" "@jpackage/jpackage-linux.cfg"
