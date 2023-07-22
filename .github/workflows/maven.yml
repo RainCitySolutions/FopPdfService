@@ -308,12 +308,6 @@ jobs:
       with:
         name: linux-app-image
 
-    - name: Rename downloaded files
-      run: |
-        ls -alR
-#        mv fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_amd64.deb fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
-#        ls -alR
-
     # CREATE GITHUB RELEASE AND ADD ASSETS
     - name: Create GitHub release
       id: create-release
@@ -328,75 +322,5 @@ jobs:
           fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
           fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
           fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
-#        artifacts: fop-pdf-service-*${{ needs.build-test.outputs.release_version }}.*
-
-#      uses: actions/create-release@latest
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        tag_name: v${{ needs.build-test.outputs.release_version }}
-#        release_name: Release ${{ needs.build-test.outputs.release_version }}
-#        draft: false
-#        prerelease: false
-
-    - name: Release Linux RPM installer
-      run: |
-        gh release upload --clobber ${{ env.VERSION }} ${{ env.FILES }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        VERSION: ${{ needs.build-test.outputs.release_version }}
-        FILES: |
-          fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
-          fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
-          fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
-
-#      uses: actions/upload-release-asset@latest
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create-release.outputs.upload_url }}
-#        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
-#        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
-#        asset_content_type: application/x-binary
-#
-#    - name: Release Linux DEB installer
-#      uses: actions/upload-release-asset@latest
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create-release.outputs.upload_url }}
-#        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
-#        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
-#        asset_content_type: application/x-binary
-#
-#    - name: Release Linux DEB ARM64 installer
-#      uses: actions/upload-release-asset@latest
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create-release.outputs.upload_url }}
-#        asset_path: fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
-#        asset_name: fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
-#        asset_content_type: application/x-binary
-#
-#    - name: Release Linux App Image
-#      if: ${{ false }}  # disable for now
-#      uses: actions/upload-release-asset@latest
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create-release.outputs.upload_url }}
-#        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
-#        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
-#        asset_content_type: application/x-binary
-#
-#    - name: Release Windows App Image
-#      if: ${{ false }}  # disable for now
-#      uses: actions/upload-release-asset@latest
-#      env:
-#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#      with:
-#        upload_url: ${{ steps.create-release.outputs.upload_url }}
-#        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
-#        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
-#        asset_content_type: application/x-binary
+#          fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
+#          fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
