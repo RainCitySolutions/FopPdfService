@@ -19,10 +19,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '16'
         distribution: 'adopt'
@@ -42,7 +42,8 @@ jobs:
     # Get version number from POM
     - name: Get Version
       id: get-version
-      run: echo "::set-output name=project_version::$(sed -n -e 's/.*<version>\(.*\)-SNAPSHOT<\/version>.*/\1/p' <<< cat pom.xml)"
+      run: echo "project_version=$(sed -n -e 's/.*<version>\(.*\)-SNAPSHOT<\/version>.*/\1/p' <<< cat pom.xml)"
+#      run: echo "::set-output name=project_version::$(sed -n -e 's/.*<version>\(.*\)-SNAPSHOT<\/version>.*/\1/p' <<< cat pom.xml)"
 
     # Rev the version number for the next build
     - name: Rev Version
@@ -64,7 +65,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Install packages
       run: |
@@ -72,7 +73,7 @@ jobs:
         sudo cp jpackage/macros.systemd /usr/lib/rpm/macros.d/
         
     - name: Set up JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '16'
         distribution: 'adopt'
@@ -92,7 +93,7 @@ jobs:
 
     # SAVE INSTALLER
     - name: Upload installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
         name: linux-rpm-installer
@@ -107,7 +108,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Install additional code
       run: |
@@ -116,7 +117,7 @@ jobs:
         #sudo cp jpackage/macros.systemd /usr/lib/rpm/macros.d/
       
     - name: Set up JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '16'
         distribution: 'adopt'
@@ -136,7 +137,7 @@ jobs:
 
     # SAVE INSTALLER
     - name: Upload installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
         name: linux-deb-installer
@@ -151,16 +152,17 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Install additional code
       run: |
         sudo apt-get update
-        sudo apt-get install libfreetype6 libx11-6 maven
+        sudo apt-get install maven
+        #sudo apt-get install libfreetype6 libx11-6 maven
         #sudo cp jpackage/macros.systemd /usr/lib/rpm/macros.d/
       
     - name: Set up JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '16'
         distribution: 'adopt'
@@ -181,7 +183,7 @@ jobs:
 
     # SAVE INSTALLER
     - name: Upload installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
         name: linux-deb-arm64-installer
@@ -197,10 +199,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '16'
         distribution: 'adopt'
@@ -225,7 +227,7 @@ jobs:
     
     # SAVE INSTALLER
     - name: Upload installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
         name: linux-app-image
@@ -241,10 +243,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Setup JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3
       with:
         java-version: '16'
         distribution: 'adopt'
@@ -264,7 +266,7 @@ jobs:
     
     # SAVE INSTALLER
     - name: Upload installer
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
         name: windows-app-image
@@ -280,29 +282,29 @@ jobs:
     steps:
     # DOWNLOAD INSTALLERS
     - name: Download Linux RPM installer
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: linux-rpm-installer
 
     - name: Download Linux DEB installer
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: linux-deb-installer
 
     - name: Download Linux DEB ARM64 installer
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: linux-deb-arm64-installer
 
     - name: Download Windows package
       if: ${{ false }}  # disable for now
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: windows-app-image
 
     - name: Download Linux app image
       if: ${{ false }}  # disable for now
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v3
       with:
         name: linux-app-image
 
@@ -315,53 +317,81 @@ jobs:
     # CREATE GITHUB RELEASE AND ADD ASSETS
     - name: Create GitHub release
       id: create-release
-      uses: actions/create-release@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: v${{ needs.build-test.outputs.release_version }}
-        release_name: Release ${{ needs.build-test.outputs.release_version }}
-        draft: false
-        prerelease: false
+        tag: v${{ needs.build-test.outputs.release_version }}
+        name: Release ${{ needs.build-test.outputs.release_version }}
+        commit: ${{ env.version-commit-ref }}
+        omitBody: true
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+#      uses: actions/create-release@latest
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        tag_name: v${{ needs.build-test.outputs.release_version }}
+#        release_name: Release ${{ needs.build-test.outputs.release_version }}
+#        draft: false
+#        prerelease: false
 
     - name: Release Linux RPM installer
-      uses: actions/upload-release-asset@latest
+      run: |
+        gh release upload --clobber ${{ env.VERSION }} ${{ env.FILES }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
-        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
-        asset_content_type: application/x-binary
+        VERSION: ${{ needs.build-test.outputs.release_version }}
+        FILES: |
+          fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
+          fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
+          fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
 
-    - name: Release Linux DEB installer
-      uses: actions/upload-release-asset@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
-        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
-        asset_content_type: application/x-binary
-
-    - name: Release Linux App Image
-      if: ${{ false }}  # disable for now
-      uses: actions/upload-release-asset@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
-        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
-        asset_content_type: application/x-binary
-
-    - name: Release Windows App Image
-      if: ${{ false }}  # disable for now
-      uses: actions/upload-release-asset@latest
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create-release.outputs.upload_url }}
-        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
-        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
-        asset_content_type: application/x-binary
+#      uses: actions/upload-release-asset@latest
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create-release.outputs.upload_url }}
+#        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
+#        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
+#        asset_content_type: application/x-binary
+#
+#    - name: Release Linux DEB installer
+#      uses: actions/upload-release-asset@latest
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create-release.outputs.upload_url }}
+#        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
+#        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
+#        asset_content_type: application/x-binary
+#
+#    - name: Release Linux DEB ARM64 installer
+#      uses: actions/upload-release-asset@latest
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create-release.outputs.upload_url }}
+#        asset_path: fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
+#        asset_name: fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
+#        asset_content_type: application/x-binary
+#
+#    - name: Release Linux App Image
+#      if: ${{ false }}  # disable for now
+#      uses: actions/upload-release-asset@latest
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create-release.outputs.upload_url }}
+#        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
+#        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
+#        asset_content_type: application/x-binary
+#
+#    - name: Release Windows App Image
+#      if: ${{ false }}  # disable for now
+#      uses: actions/upload-release-asset@latest
+#      env:
+#        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      with:
+#        upload_url: ${{ steps.create-release.outputs.upload_url }}
+#        asset_path: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
+#        asset_name: fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
+#        asset_content_type: application/x-binary
