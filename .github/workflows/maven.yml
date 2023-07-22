@@ -324,6 +324,11 @@ jobs:
         commit: ${{ env.version-commit-ref }}
         omitBody: true
         token: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: |
+          fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
+          fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
+          fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
+#        artifacts: fop-pdf-service-*${{ needs.build-test.outputs.release_version }}.*
 
 #      uses: actions/create-release@latest
 #      env:
