@@ -42,7 +42,7 @@ jobs:
     # Get version number from POM
     - name: Get Version
       id: get-version
-      run: echo "project_version=$(sed -n -e 's/.*<version>\(.*\)-SNAPSHOT<\/version>.*/\1/p' <<< cat pom.xml)"
+      run: echo "project_version=$(sed -n -e 's/.*<version>\(.*\)-SNAPSHOT<\/version>.*/\1/p' <<< cat pom.xml)" >> $GITHUB_OUTPUT
 #      run: echo "::set-output name=project_version::$(sed -n -e 's/.*<version>\(.*\)-SNAPSHOT<\/version>.*/\1/p' <<< cat pom.xml)"
 
     # Rev the version number for the next build
