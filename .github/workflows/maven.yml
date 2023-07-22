@@ -187,6 +187,7 @@ jobs:
         mkdir repackage
         pushd repackage
         ar x ./../target/dist/fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_arm64.deb
+        cat debian-binary
         zstd -d < control.tar.zst | xz > control.tar.xz
         zstd -d < data.tar.zst | xz > data.tar.xz
         ar -m -c -a ./../target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb debian-binary control.tar.xz data.tar.xz
