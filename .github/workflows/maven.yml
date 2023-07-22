@@ -179,7 +179,19 @@ jobs:
       run: |
         mvn -B package --file pom.xml
         jpackage --verbose --type deb --app-version ${{ needs.build-test.outputs.release_version }} "@jpackage/jpackage.cfg" "@jpackage/jpackage-linux.cfg"
-        mv ./target/dist/fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_arm64.deb ./target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
+#        mv ./target/dist/fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_arm64.deb ./target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
+
+    # Rebuild DEB file without zst compression
+    - name: Rebuild DEB file
+      run: |
+        mkdir repackage
+        pushd repackage
+        ar x ./target/dist/fop-pdf-service_${{ needs.build-test.outputs.release_version }}-1_arm64.deb
+        zstd -d < control.tar.zst | xz > control.tar.xz
+        zstd -d < data.tar.zst | xz > data.tar.xz
+        ar -m -c -a ./target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb debian-binary control.tar.xz data.tar.xz
+        rm debian-binary control.tar.xz data.tar.xz control.tar.zst data.tar.zst
+        popd
 
     # SAVE INSTALLER
     - name: Upload installer
