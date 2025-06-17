@@ -19,13 +19,13 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
-        java-version: '16'
-        distribution: 'adopt'
+        java-version: '21'
+        distribution: 'corretto'
         cache: maven
 
     # Build and test to ensure it's worth continuing
@@ -65,7 +65,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install packages
       run: |
@@ -73,10 +73,10 @@ jobs:
         sudo cp jpackage/macros.systemd /usr/lib/rpm/macros.d/
         
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
-        java-version: '16'
-        distribution: 'adopt'
+        java-version: '21'
+        distribution: 'corretto'
         cache: maven
 
     # Create the icon set for use by the application
@@ -93,7 +93,7 @@ jobs:
 
     # SAVE INSTALLER
     - name: Upload installer
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.rpm
         name: linux-rpm-installer
@@ -108,7 +108,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install additional code
       run: |
@@ -117,10 +117,10 @@ jobs:
         #sudo cp jpackage/macros.systemd /usr/lib/rpm/macros.d/
       
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
-        java-version: '16'
-        distribution: 'adopt'
+        java-version: '21'
+        distribution: 'corretto'
         cache: maven
          
     # Create the icon set for use by the application
@@ -137,7 +137,7 @@ jobs:
 
     # SAVE INSTALLER
     - name: Upload installer
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.deb
         name: linux-deb-installer
@@ -152,7 +152,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install additional code
       run: |
@@ -162,10 +162,10 @@ jobs:
         #sudo cp jpackage/macros.systemd /usr/lib/rpm/macros.d/
       
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
-        java-version: '16'
-        distribution: 'adopt'
+        java-version: '21'
+        distribution: 'corretto'
         architecture: 'aarch64'
         cache: maven
          
@@ -199,7 +199,7 @@ jobs:
 
     # SAVE INSTALLER
     - name: Upload installer
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./target/dist/fop-pdf-service-arm64-${{ needs.build-test.outputs.release_version }}.deb
         name: linux-deb-arm64-installer
@@ -215,13 +215,13 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
-        java-version: '16'
-        distribution: 'adopt'
+        java-version: '21'
+        distribution: 'corretto'
         cache: maven
 
     # Create the icon set for use by the application
@@ -236,14 +236,14 @@ jobs:
         jpackage --verbose --app-version ${{ needs.build-test.outputs.release_version }} --type app-image "@jpackage/jpackage.cfg"
 
     - name: Zip App Image
-      uses: papeloto/action-zip@v1
+      uses: vimtor/action-zip@v1
       with:
         files: ./target/dist/FopPdfService
         dest: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
     
     # SAVE INSTALLER
     - name: Upload installer
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.linux.zip
         name: linux-app-image
@@ -259,13 +259,13 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
-        java-version: '16'
-        distribution: 'adopt'
+        java-version: '21'
+        distribution: 'corretto'
         cache: maven
 
     # BUILD FOR DISTRIBUTION
@@ -275,14 +275,14 @@ jobs:
         jpackage --verbose --app-version ${{ needs.build-test.outputs.release_version }} "@jpackage/jpackage.cfg" "@jpackage/jpackage-windows-image.cfg"
 
     - name: Zip App Image
-      uses: papeloto/action-zip@v1
+      uses: vimtor/action-zip@v1
       with:
         files: ./target/dist/FopPdfService
         dest: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
     
     # SAVE INSTALLER
     - name: Upload installer
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         path: ./target/dist/fop-pdf-service-${{ needs.build-test.outputs.release_version }}.zip
         name: windows-app-image
@@ -298,29 +298,29 @@ jobs:
     steps:
     # DOWNLOAD INSTALLERS
     - name: Download Linux RPM installer
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: linux-rpm-installer
 
     - name: Download Linux DEB installer
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: linux-deb-installer
 
     - name: Download Linux DEB ARM64 installer
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: linux-deb-arm64-installer
 
     - name: Download Windows package
       if: ${{ false }}  # disable for now
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: windows-app-image
 
     - name: Download Linux app image
       if: ${{ false }}  # disable for now
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: linux-app-image
 
