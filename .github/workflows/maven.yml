@@ -103,7 +103,7 @@ jobs:
 
   build-linux-deb-installer:
     name: Build Linux DEB Installer on Ubuntu
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     needs: [build-test]
 
     steps:
@@ -144,10 +144,10 @@ jobs:
         retention-days: 1
 
 
-
+  # runs-on: buildjet-2vcpu-ubuntu-2204-arm
   build-linux-deb-arm64-installer:
     name: Build Linux DEB ARM64 Installer on Ubuntu
-    runs-on: buildjet-2vcpu-ubuntu-2204-arm
+    runs-on: ubuntu-2204-arm
     needs: [build-test]
 
     steps:
