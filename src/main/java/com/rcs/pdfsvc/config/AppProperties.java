@@ -10,8 +10,9 @@ import java.nio.file.FileSystems;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +38,7 @@ public class AppProperties
 			WORKDIR
 			); 
 	
-	private Hashtable<String,Object> properties = new Hashtable<String, Object>();
+	private Map<String,Object> properties = new HashMap<>();
 	
 
 	private InputStream getPropertyFileStream (String propFile) {
@@ -48,7 +49,9 @@ public class AppProperties
 			try {
 				is = new FileInputStream(propFile);
 			}
-			catch (FileNotFoundException fnfe) {}
+			catch (FileNotFoundException fnfe) {
+				// Just return null
+			}
 		}
 
 		return is;
@@ -86,7 +89,7 @@ public class AppProperties
 				throw new FileNotFoundException ("Unable to load properties file: " + propertiesFile);
 			}
 		} catch (IOException ex) {
-			System.out.println("Exception reading properties file: " + ex.getMessage());
+			System.out.println("Exception reading properties file: " + ex.getMessage());	// NOSONAR
 			throw ex;
 		}
 	}
@@ -95,97 +98,125 @@ public class AppProperties
 	{
 		switch (prop) {
 			case USE_SSL:
-				switch (value.trim().toLowerCase()) {
-					case "0":
-					case "no":
-					case "false":
-						properties.put(prop, Boolean.FALSE);
-						break;
-
-					case "1":
-					case "yes":
-					case "true":
-						properties.put(prop, Boolean.TRUE);
-						break;
-						
-					default:
-						throw new IllegalArgumentException("Invalid value for " + prop);
-				}
+				initializeSSL(prop, value);
 				break;
 				
 			case HOSTNAME:
-				String hostname = null;
-
-				if (null != value && !value.contains("/")) {
-				    try {
-				        // WORKAROUND: add any scheme and port to make the resulting URI valid
-				        hostname = new URI("my://userinfo@" + value + ":80").getHost();
-				    } catch (URISyntaxException e) { }
-				}
-				
-				if (null == hostname) {
-					throw new IllegalArgumentException("Invalid host name : " + value);
-				}
-				else {
-					properties.put(prop, hostname);
-				}
+				initializeHost(prop, value);
 				break;
 				
 			case PORT:
-				Integer port = null;
-
-				try {
-					if (null != value && value.trim().length() > 0) {
-						int intPort = Integer.valueOf(value);
-						if (intPort > 0 && intPort <=65535) {
-							port = Integer.valueOf(intPort);
-						}
-					}
-				}
-				catch (NumberFormatException e) {}
-				
-				if (null == port) {
-					throw new IllegalArgumentException("Invalid port specified : " + value);
-				}
-				else {
-					properties.put(prop, port);
-				}
+				initializePort(prop, value);
 				break;
 				
 			case APP_URL:
-				String urlPath = null;
+				initializeAppUrl(prop, value);
+				break;
+				
+			case LOGDIR, WORKDIR:
+				initializeDir(prop, value);
+				break;
+				
+			default:
+				throw new IllegalArgumentException("Unrecognized property: " + prop + " : " + value);
+		}
+	}
 
-				if (null != value && value.startsWith("/")) {
-				    try {
-				        // WORKAROUND: add any scheme and port to make the resulting URI valid
-				    	urlPath = new URI("my://userinfo@localhost:80" + value).getPath();
-				    	if (!urlPath.endsWith("/")) {
-				    		urlPath += "/";
-				    	}
-				    } catch (URISyntaxException e) { }
-				}
-				
-				if (null == urlPath) {
-					throw new IllegalArgumentException("Invalid URL path : " + value);
-				}
-				else {
-					properties.put(prop, urlPath);
-				}
+	private void initializeSSL(final String prop, final String value) {
+		switch (value.trim().toLowerCase()) {
+			case "0", "no", "false":
+				properties.put(prop, Boolean.FALSE);
+				break;
+	
+			case "1", "yes", "true":
+				properties.put(prop, Boolean.TRUE);
 				break;
 				
-			case LOGDIR:
-			case WORKDIR:
-				if (null != value && value.trim().length() > 0) {
-					try {
-						Path path = FileSystems.getDefault().getPath(value);
-						properties.put(prop, path);
-					}
-					catch (InvalidPathException ipe) {}
+			default:
+				throw new IllegalArgumentException("Invalid value for " + prop);
+		}
+	}
+
+	private void initializeHost(final String prop, final String value) {
+		String hostname = null;
+
+		if (null != value && !value.contains("/")) {
+		    try {
+		        // WORKAROUND: add any scheme and port to make the resulting URI valid
+		        hostname = new URI("my://userinfo@" + value + ":80").getHost();
+		    } catch (URISyntaxException e) {
+		    	// Just return null
+		    }
+		}
+		
+		if (null == hostname) {
+			throw new IllegalArgumentException("Invalid host name : " + value);
+		}
+		else {
+			properties.put(prop, hostname);
+		}
+	}
+
+	private void initializePort(final String prop, final String value) {
+		Integer port = null;
+
+		try {
+			if (null != value && !value.trim().isEmpty()) {
+				int intPort = Integer.parseInt(value);
+
+				if (intPort > 0 && intPort <=65535) {
+					port = Integer.valueOf(intPort);
 				}
-				if (null == properties.get(prop)) {
-					throw new IllegalArgumentException("Invalid path specified for " + prop + " : " + value);
-				}
-				break;
+			}
+		}
+		catch (NumberFormatException e) {
+			// Just return null
+		}
+		
+		if (null == port) {
+			throw new IllegalArgumentException("Invalid port specified : " + value);
+		}
+		else {
+			properties.put(prop, port);
+		}
+	}
+	
+	private void initializeAppUrl(final String prop, final String value) {
+		String urlPath = null;
+
+		if (null != value && value.startsWith("/")) {
+		    try {
+		        // WORKAROUND: add any scheme and port to make the resulting URI valid
+		    	urlPath = new URI("my://userinfo@localhost:80" + value).getPath();
+		    	if (!urlPath.endsWith("/")) {
+		    		urlPath += "/";
+		    	}
+		    } catch (URISyntaxException e) {
+		    	// Just return null
+		    }
+		}
+		
+		if (null == urlPath) {
+			throw new IllegalArgumentException("Invalid URL path : " + value);
+		}
+		else {
+			properties.put(prop, urlPath);
+		}
+	}
+
+	private void initializeDir(final String prop, final String value) {
+		if (null != value && !value.trim().isEmpty()) {
+			try {
+				Path path = FileSystems.getDefault().getPath(value);
+				properties.put(prop, path);
+			}
+			catch (InvalidPathException ipe) {
+				// Just return null
+			}
+		}
+
+		if (null == properties.get(prop)) {
+			throw new IllegalArgumentException("Invalid path specified for " + prop + " : " + value);
 		}
 	}
 
@@ -200,7 +231,7 @@ public class AppProperties
 	private String getScheme () {
 		StringBuilder scheme = new StringBuilder("http");
 		
-		if ((Boolean)properties.get(USE_SSL)) {
+		if (Boolean.TRUE.equals(properties.get(USE_SSL))) {
 			scheme.append("s");
 		}
 		

@@ -1,7 +1,6 @@
 package com.rcs.pdfsvc.resource;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -215,8 +214,10 @@ public class Xml2PdfResource {
     	try {
 			PdfWriter writer = new PdfWriter(pdfFile);
 			writer.setSmartMode(true);
+
 			try (PdfDocument pdfDoc = new PdfDocument(writer) ) {
 				pdfDoc.initializeOutlines();
+
 				try (PdfDocument orgPdfDoc = new PdfDocument(new PdfReader(orgPdfFile))) {
 					orgPdfDoc.copyPagesTo(1, orgPdfDoc.getNumberOfPages(), pdfDoc);
 				}
@@ -227,8 +228,8 @@ public class Xml2PdfResource {
 			catch (Exception e) {
 				logger.catching(Level.ERROR, e);
 			}
-		} catch (FileNotFoundException fnfe) {
-			logger.catching(Level.ERROR, fnfe);
+		} catch (IOException ioe) {
+			logger.catching(Level.ERROR, ioe);
 		}
 
 		logger.traceExit();

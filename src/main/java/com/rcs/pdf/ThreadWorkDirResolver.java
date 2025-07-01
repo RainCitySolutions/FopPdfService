@@ -22,6 +22,10 @@ public class ThreadWorkDirResolver
 	public static void removeWorkDir() {
 		workdirPath.remove();
 	}
+	
+	public static Path getWorkDir() {
+		return workdirPath.get();
+	}
 
 	@Override
 	public Source resolve(String href, String base)

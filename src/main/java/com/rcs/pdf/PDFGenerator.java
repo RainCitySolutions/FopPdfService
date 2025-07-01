@@ -31,6 +31,7 @@ import org.apache.fop.events.Event;
 import org.apache.fop.events.EventFormatter;
 import org.apache.fop.events.EventListener;
 import org.apache.fop.events.model.EventSeverity;
+import org.apache.fop.render.RendererFactory;
 import org.apache.logging.log4j.CloseableThreadContext;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -39,6 +40,8 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import org.apache.xmlgraphics.image.loader.impl.AbstractImageSessionContext;
 import org.apache.xmlgraphics.util.MimeConstants;
+
+import com.rcs.pdf.fop.CustomPDFDocumentHandlerMaker;
 
 
 public class PDFGenerator {
@@ -169,6 +172,9 @@ public class PDFGenerator {
 		{
 			FOUserAgent foUserAgent = createFOUserAgent(jobLogFile, logLevel);
 
+	        RendererFactory rendererFactory = fopFactory.getRendererFactory();
+	        rendererFactory.addDocumentHandlerMaker(new CustomPDFDocumentHandlerMaker());
+			
 			// Construct fop with desired output format
 			Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, outStrm);
 
@@ -188,7 +194,7 @@ public class PDFGenerator {
 			}
 		} catch (Exception e) {
 			logger.catching(Level.ERROR, e);
-			e.printStackTrace(System.err);
+			e.printStackTrace(System.err);	// NOSONAR
 			throw new TransformerException(e);
 		}
 
@@ -208,6 +214,9 @@ public class PDFGenerator {
 			// Setup XSLT
 			try
 			{
+		        RendererFactory rendererFactory = fopFactory.getRendererFactory();
+		        rendererFactory.addDocumentHandlerMaker(new CustomPDFDocumentHandlerMaker());
+				
 				// Construct fop with desired output format
 				Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, foUserAgent, outStrm);
 
