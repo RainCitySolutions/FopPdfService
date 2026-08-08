@@ -14,7 +14,7 @@
 		<jersey.version>3.1.11</jersey.version>
 		<fop.version>2.11</fop.version>
 		<itext.version>9.7.1</itext.version>
-		<log4j.version>2.25.4</log4j.version>
+		<log4j.version>2.26.1</log4j.version>
 		<junit.version>5.14.3</junit.version>
 		<mockito.version>5.23.0</mockito.version>
 		<saxon.version>13.0</saxon.version>
