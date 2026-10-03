@@ -13,7 +13,7 @@
 		<maven.compiler.release>${maven.compiler.source}</maven.compiler.release>
 		<jersey.version>4.0.2</jersey.version>
 		<fop.version>2.11</fop.version>
-		<itext.version>9.7.1</itext.version>
+		<itext.version>9.8.0</itext.version>
 		<log4j.version>2.26.1</log4j.version>
 		<junit.version>6.1.3</junit.version>
 		<mockito.version>5.23.0</mockito.version>
