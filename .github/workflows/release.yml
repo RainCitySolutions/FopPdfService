@@ -5,7 +5,7 @@ name: Build and Package
 
 # Global workflow constants defined here
 env:
-  JAVA_VERSION: '21'
+  JAVA_VERSION: '25'
   JAVA_DISTRO: 'corretto'
 
 on:
